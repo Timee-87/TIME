@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>87 Years Countdown</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Water flowing effect */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20vh;
+            background: linear-gradient(to bottom, rgba(15, 52, 96, 0.4), rgba(15, 52, 96, 0));
+            opacity: 0.7;
+            animation: water-flow 12s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes water-flow {
+            0% {
+                transform: translateY(-5%) translateX(-5%) rotate(1deg);
+            }
+            50% {
+                transform: translateY(2%) translateX(3%) rotate(-1deg);
+            }
+            100% {
+                transform: translateY(-5%) translateX(-5%) rotate(1deg);
+            }
+        }
+        
+        /* Garden elements with dark theme */
+        body::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 25vh;
+            background: linear-gradient(to top, rgba(26, 26, 46, 0.7), rgba(26, 26, 46, 0));
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .time-segment {
+            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            min-width: 180px;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .time-segment:hover {
+            transform: translateY(-10px);
+        }
+        
+        .time {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #e94560;
+        }
+        
+        .label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            opacity: 0.6;
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+        
+        .expiration-message {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            margin-top: 2rem;
+            animation: fadeIn 1s ease-in;
+            text-align: left;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+        }
+        
+        .expiration-message h2 {
+            color: #e94560;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+        }
+        
+        .expiration-message p {
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* White background with black text when countdown expires */
+        body.expired {
+            background: #ffffff;
+            color: #000000;
+            animation: none;
+        }
+        
+        body.expired::before,
+        body.expired::after {
+            display: none;
+        }
+        
+        body.expired .time-segment {
+            background: rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.expired .time {
+            color: #0f3460;
+        }
+        
+        body.expired .expiration-message {
+            background: rgba(0, 0, 0, 0.02);
+            color: #000000;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.expired .expiration-message h2 {
+            color: #0f3460;
+        }
+        
+        @media (max-width: 768px) {
+            .countdown {
+                gap: 1rem;
+            }
+            
+            .time-segment {
+                padding: 1.5rem;
+                min-width: 130px;
+            }
+            
+            .time {
+                font-size: 2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .expiration-message {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="countdown-heading">Time is Ticking</h1>
+        <p class="subtitle">Cherish every moment, make every second count</p>
+        
+        <div class="countdown">
+            <div class="time-segment">
+                <div id="days" class="time">0</div>
+                <div class="label">Days</div>
+            </div>
+            <div class="time-segment">
+                <div id="hours" class="time">0</div>
+                <div class="label">Hours</div>
+            </div>
+            <div class="time-segment">
+                <div id="minutes" class="time">0</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="time-segment">
+                <div id="seconds" class="time">0</div>
+                <div class="label">Seconds</div>
+            </div>
+        </div>
+        
+        <div id="expiration-message" class="expiration-message" style="display: none;">
+            <h2>A Message From The Past</h2>
+            <p>If you're reading this, I'm probably no longer here. I just wanted to say that this lifetime is precious, so don't waste a single second of it. We as humans make mistakes in life, and seconds can be wasted without proper decisions. That's why with every mistake we make in those seconds, remember that we're just human after all. dont forget that theirs always a people that will help you also the creator above. don't lose hope don't be sad.</p>
+            <p>So be happy, breathe, and enjoy life. Don't take it too seriously. As I've said, we live, we love and then we die, my friend.</p>
+            <p>Goodbye to all. I want you to know that even when I'm gone, memories will stay forever in my heart. Thank you to everyone—yes, you. I know you know it's you. Thank you very much.</p>
+            <p>I'm grateful to have lived—not just for the happy moments, but for the struggles and painful times too, because those are what made me strong and made my life have a purpose.</p>
+            <p>This is Norwell Andres Valderamos, signing off.  To God be the glory. Goodbye...</p>
+        </div>
+        
+        <p class="footer">Time is the most valuable thing a man can spend.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate 87 years in milliseconds
+            const eightySevenYearsInMs = 87 * 365 * 24 * 60 * 60 * 1000;
+            const sixtyYearsInMs = 60 * 365 * 24 * 60 * 60 * 1000;
+            
+            // Set the target date (87 years from now)
+            const targetDate = new Date().getTime() + eightySevenYearsInMs;
+            
+            // Update the countdown every second
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            
+            // Initial call to display the countdown immediately
+            updateCountdown();
+            
+            function updateCountdown() {
+                // Get current date and time
+                const now = new Date().getTime();
+                
+                // Calculate the remaining time
+                const timeRemaining = targetDate - now;
+                
+                // Calculate days, hours, minutes, and seconds
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                
+                // Display the countdown
+                document.getElementById('days').innerText = days;
+                document.getElementById('hours').innerText = hours;
+                document.getElementById('minutes').innerText = minutes;
+                document.getElementById('seconds').innerText = seconds;
+                
+                // Update heading based on countdown progress
+                const pageHeading = document.getElementById('countdown-heading');
+                if (timeRemaining <= 0) {
+                    pageHeading.innerText = "Journey Ends Here";
+                } else if (timeRemaining <= sixtyYearsInMs) {
+                    pageHeading.innerText = "Time is Running Out";
+                } else {
+                    pageHeading.innerText = "Time is Ticking";
+                }
+                
+                // If the countdown is over
+                if (timeRemaining < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('days').innerText = '0';
+                    document.getElementById('hours').innerText = '0';
+                    document.getElementById('minutes').innerText = '0';
+                    document.getElementById('seconds').innerText = '0';
+                    
+                    // HI THERE WHY YOU LOOKING AT MY CODE?! LOL (Can you tell me what year is now?) i really dont know kung kailan ba ako mamatay but im pretty sure at one thing na kahit maaga man ako mamatay or old enough para ma deds hahaha im happy kasi life is not about age but its about moments and memories that has been embedded in my heart na kahit mamatay man ako you that feel na kahit wala na ako there's always me there in someones heart na kahit di naman ako gaano ka special na tao thats why if ikaw to i appreciate and love you so much you made my life special and have purpose in this world again thank you, 𝓲 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾....
+                     document.getElementById('expiration-message').style.display = 'block';
+                    
+                    // Change to white background with black text
+                    document.body.classList.add('expired');
+                }
+            }
+            
+            // For testing purposes - uncomment the line below to see the expired state immediately
+            // document.body.classList.add('expired'); document.getElementById('expiration-message').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
